@@ -8,7 +8,8 @@ chat-app/
 ├── server.js  
 ├── package.json  
 └── .env  
-
+![alt text](https://github.com/thenaserov/anonchat/blob/main/server.png)
+![alt text](https://github.com/thenaserov/anonchat/blob/main/client.png)
 
 
 1. Install node on your linux machine
