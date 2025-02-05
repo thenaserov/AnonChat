@@ -1,170 +1,230 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>  
+<html lang="en">  
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Chat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Random Chat</title>  
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;700&display=swap" rel="stylesheet">  
+    <style>  
+        * {  
+            box-sizing: border-box;  
+        }  
 
-        body {
-            font-family: 'Helvetica', sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            height: 100vh; /* Full height */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        body {  
+            font-family: 'Helvetica', sans-serif;  
+            background-color: #f0f0f0;  
+            color: #333;  
+            margin: 0;  
+            padding: 0;  
+            height: 100vh;  
+            display: flex;  
+            flex-direction: column;  
+            align-items: center;  
+            justify-content: center; /* Center vertically */  
+        }  
 
-        input {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            width: calc(100% - 22px); /* Adjust input width */
-            margin: 5px 0;
-        }
+        #usernameArea {  
+            display: flex;  
+            flex-direction: column;  
+            align-items: center; /* Center elements */  
+            justify-content: center; /* Center elements */  
+            height: 100vh; /* Full height for input area */  
+        }  
 
-        #chatBox {
-            display: none;
-            width: 100%;
-            height: calc(100vh - 80px); /* Fill height minus buttons */
-            max-width: 400px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-        }
+        input {  
+            padding: 10px;  
+            border-radius: 25px; /* Rounded corners */  
+            border: 1px solid #ccc;  
+            width: calc(100% - 22px);  
+            margin-bottom: 10px; /* Space between input and button */  
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);  
+            transition: all 0.2s ease; /* Smooth transition */  
+        }  
 
-        #messages {
-            padding: 10px;
-            margin: 0;
-            flex-grow: 1; /* Allow messages to grow */
-            overflow-y: auto; /* Scrollable */
-            display: flex;
-            flex-direction: column; /* New messages at the bottom */
-        }
+        input:focus {  
+            border-color: #007AFF;  
+            box-shadow: 0 0 5px rgba(0, 122, 255, 0.4); /* Focus effect */  
+            outline: none; /* Remove outline */  
+        }  
 
-        .message {
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 5px;
-            max-width: 80%;
-            word-wrap: break-word; /* Prevent overflow */
-        }
+        #chatBox {  
+            display: none; /* Hide chat box initially */  
+            width: 100%;  
+            height: 100vh;  
+            max-width: 400px;  
+            background: #fff;  
+            border-radius: 10px;  
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  
+            display: flex;  
+            flex-direction: column;  
+        }  
 
-        .you {
-            align-self: flex-end;
-            background-color: #007AFF; /* iOS blue */
-            color: white;
-        }
+        #messages {  
+            padding: 10px;  
+            margin: 0;  
+            flex-grow: 1;  
+            overflow-y: auto;  
+            display: flex;  
+            flex-direction: column;  
+        }  
 
-        .them {
-            align-self: flex-start;
-            background-color: #E5E5EA; /* Light gray */
-            color: black;
-        }
+        .message {  
+            margin: 5px 0;  
+            padding: 8px;  
+            border-radius: 15px;  
+            max-width: 80%;  
+            word-wrap: break-word;  
+        }  
 
-        button {
-            background-color: #007AFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px;
-            cursor: pointer;
-            margin: 5px 0;
-        }
+        .you {  
+            align-self: flex-end;  
+            background-color: #007AFF;  
+            color: white;  
+        }  
 
-        button:hover {
-            background-color: #005BB5;
-        }
+        .them {  
+            align-self: flex-start;  
+            background-color: #E5E5EA;  
+            color: black;  
+        }  
 
-        #nextPairButton {
-            display: none;
-        }
-    </style>
-</head>
+        button {  
+            background-color: #007AFF;  
+            color: white;  
+            border: none;  
+            border-radius: 25px; /* Rounded corners */  
+            padding: 10px;  
+            cursor: pointer;  
+            margin: 5px 0;  
+            width: 50px; /* Fixed width for send button */  
+            height: 50px; /* Fixed height for send button */  
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);  
+            transition: background-color 0.2s ease;  
+        }  
 
-<body>
-    <input id="username" placeholder="Enter your name" />
-    <button id="joinButton">Join Chat</button>
-    <div id="chatBox">
-        <div id="messages"></div>
-        <input id="messageInput" placeholder="Type a message..." />
-        <button id="sendButton">Send</button>
-        <button id="nextPairButton">Find Another Chat</button>
-    </div>
+        button:hover {  
+            background-color: #005BB5; /* Darker color on hover */  
+        }  
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        const usernameInput = document.getElementById('username');
-        const joinButton = document.getElementById('joinButton');
-        const chatBox = document.getElementById('chatBox');
-        const messagesDiv = document.getElementById('messages');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-        const nextPairButton = document.getElementById('nextPairButton');
+        .messagegen {  
+            display: flex;  
+            align-items: center;  
+            padding: 10px;  
+            border-top: 1px solid #ccc;  
+        }  
 
-        let currentRecipient = null;
+        #messageInput {  
+            flex-grow: 1;  
+            margin-right: 10px; /* Space between input and send button */  
+        }  
 
-        joinButton.addEventListener('click', () => {
-            const username = usernameInput.value;
-            if (username) {
-                socket.emit('join', username);
-                chatBox.style.display = 'flex';
-            }
-        });
+        #messageInput, button {  
+            border-radius: 25px; /* Consistent rounding */  
+        }  
 
-        socket.on('privateChat', (pairedUsername) => {
-            messagesDiv.innerHTML += `<div class="message you">You're chatting with ${pairedUsername}!</div>`;
-            currentRecipient = pairedUsername;
-            nextPairButton.style.display = 'block';
-            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
-        });
+        /* Style for the Find Another Chat button */  
+        #nextPairButton {  
+            display: none;  
+            width: 100%; /* Make it full width */  
+            padding: 12px; /* Add some padding for a better touch target */  
+            border-radius: 25px; /* Consistent rounding */  
+            background-color: #007AFF; /* Button color */  
+            color: white; /* Text color */  
+            border: none; /* Remove border */  
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Shadow for depth */  
+            transition: background-color 0.2s ease; /* Smooth transition */  
+        }  
 
-        sendButton.addEventListener('click', () => {
-            const message = messageInput.value;
-            if (message && currentRecipient) {
-                socket.emit('sendMessage', message);
-                messagesDiv.innerHTML += `<div class="message you">You: ${message}</div>`;
-                messageInput.value = '';
-                messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
-            }
-        });
+        #nextPairButton:hover {  
+            background-color: #005BB5; /* Darker color on hover */  
+        }  
+    </style>  
+</head>  
 
-        nextPairButton.addEventListener('click', () => {
-            currentRecipient = null;
-            messagesDiv.innerHTML = ""; // Clear previous chats
-            messagesDiv.innerHTML += "<div class='message you'>Finding another chat partner...</div>";
-            nextPairButton.style.display = 'none';
-            socket.emit('join', usernameInput.value); // Try to find another partner
-            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
-        });
+<body>  
+    <div id="usernameArea">  
+        <input id="username" placeholder="Enter your name" />  
+        <button id="joinButton">Join Chat</button>  
+    </div>  
+    
+    <div id="chatBox">   
+        <div id="messages"></div>  
+        <div class="messagegen">  
+            <input id="messageInput" placeholder="Type a message..." />  
+            <button id="sendButton">Send</button>  
+        </div>  
+        <button id="nextPairButton" style="display:none;">Find Another Chat</button>  
+    </div>  
 
-        socket.on('receiveMessage', (data) => {
-            messagesDiv.innerHTML += `<div class="message them">${data.sender}: ${data.message}</div>`;
-            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
-        });
+    <script src="/socket.io/socket.io.js"></script>  
+    <script>  
+        const socket = io();  
+        const usernameInput = document.getElementById('username');  
+        const joinButton = document.getElementById('joinButton');  
+        const chatBox = document.getElementById('chatBox');  
+        const messagesDiv = document.getElementById('messages');  
+        const messageInput = document.getElementById('messageInput');  
+        const sendButton = document.getElementById('sendButton');  
+        const nextPairButton = document.getElementById('nextPairButton');  
 
-        socket.on('pairEnded', (username) => {
-            messagesDiv.innerHTML += `<div class='message you'>${username} has left the chat.</div>`;
-            currentRecipient = null;
-            nextPairButton.style.display = 'none';
-        });
+        let currentRecipient = null;  
 
-        socket.on('waitingForPair', (message) => {
-            messagesDiv.innerHTML += `<div class='message you'>${message}</div>`;
-            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
-        });
-    </script>
-</body>
+        // Ensure the chat box is hidden initially  
+        chatBox.style.display = 'none';   
+
+        joinButton.addEventListener('click', () => {  
+            const username = usernameInput.value;  
+            if (username) {  
+                socket.emit('join', username);  
+                document.getElementById('usernameArea').style.display = 'none'; // Hide username input area  
+                chatBox.style.display = 'flex'; // Show chat box  
+                usernameInput.value = ''; // Clear the username input after joining  
+            }  
+        });  
+
+        socket.on('privateChat', (pairedUsername) => {  
+            messagesDiv.innerHTML += `<div class="message you">You're chatting with ${pairedUsername}!</div>`;  
+            currentRecipient = pairedUsername;  
+            nextPairButton.style.display = 'block'; // Show the find another chat button  
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom  
+        });  
+
+        sendButton.addEventListener('click', () => {  
+            const message = messageInput.value;  
+            if (message && currentRecipient) {  
+                socket.emit('sendMessage', message);  
+                messagesDiv.innerHTML += `<div class="message you">You: ${message}</div>`;  
+                messageInput.value = '';  
+                messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom  
+            }  
+        });  
+
+        nextPairButton.addEventListener('click', () => {  
+            currentRecipient = null;  
+            messagesDiv.innerHTML = ""; // Clear previous chats  
+            messagesDiv.innerHTML += "<div class='message you'>Finding another chat partner...</div>";  
+            nextPairButton.style.display = 'none';  
+            socket.emit('join', usernameInput.value); // Try to find another partner  
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom  
+        });  
+
+        socket.on('receiveMessage', (data) => {  
+            messagesDiv.innerHTML += `<div class="message them">${data.sender}: ${data.message}</div>`;  
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom  
+        });  
+
+        socket.on('pairEnded', (username) => {  
+            messagesDiv.innerHTML += `<div class='message you'>${username} has left the chat.</div>`;  
+            currentRecipient = null;  
+            nextPairButton.style.display = 'none';  
+        });  
+
+        socket.on('waitingForPair', (message) => {  
+            messagesDiv.innerHTML += `<div class='message you'>${message}</div>`;  
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom  
+        });  
+    </script>  
+</body>  
 
 </html>
